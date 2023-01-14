@@ -1,0 +1,41 @@
+{
+  "name": "kagg/online-payment",
+  "description": "Allows online payment for certain products only",
+  "license": "GPL-2.0-or-later",
+  "keywords": [
+    "WooCommerce",
+    "online payment"
+  ],
+  "homepage": "https://kagg.eu/en/",
+  "type": "wordpress-plugin",
+  "authors": [
+    {
+      "name": "Ivan Ovsyannikov"
+    },
+    {
+      "name": "KAGG Design",
+      "homepage": "https://kagg.eu/en/"
+    }
+  ],
+  "support": {
+    "issues": "https://kagg.eu/en/"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {},
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^3.7.1",
+    "dealerdirect/phpcodesniffer-composer-installer": "^v0.7.2",
+    "phpcompatibility/php-compatibility": "^9.3.5",
+    "phpcompatibility/phpcompatibility-wp": "^2.1.4",
+    "wp-coding-standards/wpcs": "^2.3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "KAGG\\OnlinePayment\\": "src/php"
+    }
+  },
+  "scripts": {
+    "phpcs": "phpcs --colors --standard=phpcs.xml"
+  }
+}
