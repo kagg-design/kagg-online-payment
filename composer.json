@@ -37,5 +37,10 @@
   },
   "scripts": {
     "phpcs": "phpcs --colors --standard=phpcs.xml"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
   }
 }

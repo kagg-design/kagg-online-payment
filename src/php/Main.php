@@ -31,7 +31,7 @@ class Main {
 		add_action( 'woocommerce_process_product_meta', [ $this, 'admin_payment_available_save' ] );
 		add_filter( 'manage_edit-product_columns', [ $this, 'column_into_product_list' ] );
 		add_action( 'manage_product_posts_custom_column', [ $this, 'custom_column' ], 10, 2 );
-		add_action( 'quick_edit_custom_box', [ $this, 'quickedit_checkbox' ], 10, 2 );
+		add_action( 'quick_edit_custom_box', [ $this, 'quick_edit_checkbox' ], 10, 2 );
 		add_action( 'admin_footer-edit.php', [ $this, 'admin_footer_script' ], 11 );
 		add_action( 'save_post', [ $this, 'admin_payment_available_save' ], 10, 3 );
 		add_action( 'woocommerce_add_to_cart', [ $this, 'check_cart_payment_available' ] );
@@ -71,7 +71,7 @@ class Main {
 	 *
 	 * @return void
 	 */
-	public function admin_payment_available_save( $post_id ): void {
+	public function admin_payment_available_save( int $post_id ): void {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		$paymaster_payment_available = isset( $_POST['_paymaster_payment_available'] ) ?
 			sanitize_text_field( wp_unslash( $_POST['_paymaster_payment_available'] ) ) :
@@ -97,17 +97,17 @@ class Main {
 	/**
 	 * Output custom column.
 	 *
-	 * @param string $column Column.
-	 * @param $post_id
+	 * @param string $column  Column.
+	 * @param int    $post_id Post id.
 	 *
 	 * @return void
 	 */
-	public function custom_column( string $column, $post_id ): void {
+	public function custom_column( string $column, int $post_id ): void {
 		if ( '_paymaster_payment_available' !== $column ) {
 			return;
 		}
 
-		$arr_value = get_post_meta( $post_id, '_paymaster_payment_available', false );
+		$arr_value = get_post_meta( $post_id, '_paymaster_payment_available' );
 		$value     = ( isset( $arr_value[0] ) && 'yes' !== $arr_value[0] ) ?
 			'<span class="paymaster-payment-available" data-status="no" style="color: #e1360c;">Запрещена</span>' :
 			'<span class="paymaster-payment-available" data-status="yes">Разрешена</span>';
@@ -124,7 +124,7 @@ class Main {
 	 *
 	 * @return void
 	 */
-	public function quickedit_checkbox( string $col, string $type ): void {
+	public function quick_edit_checkbox( string $col, string $type ): void {
 		if ( '_paymaster_payment_available' !== $col || 'product' !== $type ) {
 			return;
 		}
