@@ -13,6 +13,11 @@ namespace KAGG\OnlinePayment;
 class Main {
 
 	/**
+	 * Online payment available meta.
+	 */
+	private const ONLINE_PAYMENT_AVAILABLE = '_paymaster_payment_available';
+
+	/**
 	 * Init class.
 	 *
 	 * @return void
@@ -53,7 +58,7 @@ class Main {
 
 		woocommerce_wp_checkbox(
 			[
-				'id'          => '_paymaster_payment_available',
+				'id'          => self::ONLINE_PAYMENT_AVAILABLE,
 				'value'       => $value,
 				'cbvalue'     => 'yes',
 				'label'       => 'Он-лайн оплата',
@@ -73,12 +78,12 @@ class Main {
 	 */
 	public function admin_payment_available_save( int $post_id ): void {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
-		$paymaster_payment_available = isset( $_POST['_paymaster_payment_available'] ) ?
-			sanitize_text_field( wp_unslash( $_POST['_paymaster_payment_available'] ) ) :
+		$paymaster_payment_available = isset( $_POST[ self::ONLINE_PAYMENT_AVAILABLE ] ) ?
+			sanitize_text_field( wp_unslash( $_POST[ self::ONLINE_PAYMENT_AVAILABLE ] ) ) :
 			'';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
-		update_post_meta( $post_id, '_paymaster_payment_available', $paymaster_payment_available );
+		update_post_meta( $post_id, self::ONLINE_PAYMENT_AVAILABLE, $paymaster_payment_available );
 	}
 
 	/**
@@ -89,7 +94,7 @@ class Main {
 	 * @return array
 	 */
 	public function column_into_product_list( array $defaults ): array {
-		$defaults['_paymaster_payment_available'] = 'Он-лайн оплата';
+		$defaults[ self::ONLINE_PAYMENT_AVAILABLE ] = 'Он-лайн оплата';
 
 		return $defaults;
 	}
@@ -103,11 +108,11 @@ class Main {
 	 * @return void
 	 */
 	public function custom_column( string $column, int $post_id ): void {
-		if ( '_paymaster_payment_available' !== $column ) {
+		if ( self::ONLINE_PAYMENT_AVAILABLE !== $column ) {
 			return;
 		}
 
-		$arr_value = get_post_meta( $post_id, '_paymaster_payment_available' );
+		$arr_value = get_post_meta( $post_id, self::ONLINE_PAYMENT_AVAILABLE );
 		$value     = ( isset( $arr_value[0] ) && 'yes' !== $arr_value[0] ) ?
 			'<span class="paymaster-payment-available" data-status="no" style="color: #e1360c;">Запрещена</span>' :
 			'<span class="paymaster-payment-available" data-status="yes">Разрешена</span>';
@@ -125,7 +130,7 @@ class Main {
 	 * @return void
 	 */
 	public function quick_edit_checkbox( string $col, string $type ): void {
-		if ( '_paymaster_payment_available' !== $col || 'product' !== $type ) {
+		if ( self::ONLINE_PAYMENT_AVAILABLE !== $col || 'product' !== $type ) {
 			return;
 		}
 
@@ -202,7 +207,7 @@ class Main {
 		$check_payment_available = true;
 
 		foreach ( $cart as $item ) {
-			$arr_value               = get_post_meta( $item['product_id'], '_paymaster_payment_available' );
+			$arr_value               = get_post_meta( $item['product_id'], self::ONLINE_PAYMENT_AVAILABLE );
 			$check_payment_available = isset( $arr_value[0] ) && 'yes' === $arr_value[0];
 
 			if ( ! $check_payment_available ) {
